@@ -60,4 +60,34 @@ cityForm.addEventListener('submit', function (event) {
     searchHistory.push(cityInput.value);
     // Commit city name to local storage
     localStorage.setItem('search', JSON.stringify(searchHistory));
+    renderSearchHistory()
 });
+
+// Create new element for each search history item and render it to the screen as a button.
+function renderSearchHistory() {
+    // Initialize blank search history bin
+    searchHistoryEl.innerHTML = "";
+    // Loop through entire search history
+    for (let i = 0; i < searchHistory.length; i++) {
+        // Create new button element
+        const historyBtn = document.createElement('button');
+        // Set new button attributes
+        historyBtn.setAttribute('type', 'submit');
+        historyBtn.setAttribute('readonly', true);
+        historyBtn.setAttribute('class', 'btn btn-secondary btn-block mt-2');
+        // This button value matches this search history item
+        historyBtn.setAttribute('value', searchHistory[i]);
+        // Give button a text value
+        historyBtn.innerHTML = historyBtn.value;
+        // Event listener for click on search history button to execute getWeather() with associated city name as parameter.
+        historyBtn.addEventListener('click', function (event) {
+            event.preventDefault();
+            getWeather(historyBtn.value);
+        })
+        // Display new search history button in search history bin
+        searchHistoryEl.append(historyBtn);
+    }
+}
+
+// Display search history upon page load/reload
+renderSearchHistory();
