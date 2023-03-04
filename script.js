@@ -11,6 +11,9 @@ const searchHistoryEl = document.getElementById('search-history');
 // Search history, if there is one
 let searchHistory = JSON.parse(localStorage.getItem('search')) || [];
 
+// Clear search history
+const clearHistoryBtn = document.getElementById('clear-history');
+
 
 // Get the current day & 5-day forecast weather data from openweathermap API using name of the desired city as parameter.
 // Currently just displaying data to console.
@@ -89,5 +92,11 @@ function renderSearchHistory() {
     }
 }
 
+// Event listener to reset local storage and search history upon click 
+clearHistoryBtn.addEventListener('click', function() {
+    localStorage.clear();
+    searchHistory = [];
+    renderSearchHistory();
+})
 // Display search history upon page load/reload
 renderSearchHistory();
