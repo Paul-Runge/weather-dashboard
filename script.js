@@ -14,7 +14,13 @@ let searchHistory = JSON.parse(localStorage.getItem('search')) || [];
 // Clear search history
 const clearHistoryBtn = document.getElementById('clear-history');
 
-
+weatherTodayEl = document.getElementById('weather-today');
+cityNameEl = document.getElementById('city-name');
+tempEl = document.getElementById('temperature');
+windEl = document.getElementById('wind');
+humidityEl = document.getElementById('humidity');
+fivedayEl = document.querySelectorAll('.forecast');
+// console.log(fivedayEl.length);
 // Get the current day & 5-day forecast weather data from openweathermap API using name of the desired city as parameter.
 // Currently just displaying data to console.
 // Will add code to render to app display later on.
@@ -26,18 +32,62 @@ function getWeather(cityName) {
     // URL for 5-day forecast
     let fiveDayURL = "https://api.openweathermap.org/data/2.5/forecast?units=imperial&q=" + cityName + "&appid=" + APIKey;
     
-    // Get and log current day weather
+    
+    // Get, log, and display current day weather data
     fetch(todayURL)
         .then(function (response) { 
             response.json()
-            .then((data) => console.log(data));
+            .then(function (data) { 
+                console.log(data);
+                // Make element visible
+                weatherTodayEl.classList.remove('d-none');
+                const date = new Date(data.dt * 1000);
+                // console.log(date);
+                const year = date.getFullYear();
+                //console.log(year);
+                const month = date.getMonth() + 1;
+                //console.log(month);
+                const day = date.getDate();
+                //console.log(day);
+                cityNameEl.innerHTML = data.name + " (" + month + "/" + day + "/" + year + ")";
+                tempEl.innerHTML = "Temperature: " + Math.floor(data.main.temp) + ' \u00B0F';
+                windEl.innerHTML = "Wind: " + data.wind.speed + " mph";
+                humidityEl.innerHTML = "Humidity: " + data.main.humidity + "%";
+            });
         });
 
-    // Get and log 5-day forecast
+    // Get, log, and display 5-day forecast weather data
     fetch(fiveDayURL)
         .then(function (response) {
             response.json()
-            .then ((data) => console.log(data));
+            .then (function (data) {
+                // console.log(data);
+                for (let i = 0; i < fivedayEl.length; i++) {
+                    fivedayEl[i].innerHTML = "";
+                    const index = i * 8 + 1;
+                    const date = new Date(data.list[index].dt_txt);
+                    // console.log(date);
+                    const year = date.getFullYear();
+                    //console.log(year);
+                    const month = date.getMonth() + 1;
+                    //console.log(month);
+                    const day = date.getDate();
+                    //console.log(day);
+                    const fiveDayDate = document.createElement('p');
+                    const fiveDayTemp = document.createElement('p');
+                    const fiveDayWind = document.createElement('p');
+                    const fiveDayHumidity = document.createElement('p');
+                    // console.log(fivedayEl[index]);
+                    fiveDayDate.innerHTML = month + "/" + day + "/" + year;
+                    fiveDayTemp.innerHTML = "Temperature: " + Math.floor(data.list[index].main.temp) + ' \u00B0F';
+                    fiveDayWind.innerHTML = "Wind: " + data.list[index].wind.speed + " mph";
+                    fiveDayHumidity.innerHTML = "Humidity: " + data.list[index].main.humidity + "%";
+                    fivedayEl[i].append(fiveDayDate);
+                    fivedayEl[i].append(fiveDayTemp);
+                    fivedayEl[i].append(fiveDayWind);
+                    fivedayEl[i].append(fiveDayHumidity);
+                 }
+            })
         })
 }
 
@@ -63,7 +113,8 @@ cityForm.addEventListener('submit', function (event) {
     searchHistory.push(cityInput.value);
     // Commit city name to local storage
     localStorage.setItem('search', JSON.stringify(searchHistory));
-    renderSearchHistory()
+    renderSearchHistory();
+    cityInput.value = "";
 });
 
 // Create new element for each search history item and render it to the screen as a button.
