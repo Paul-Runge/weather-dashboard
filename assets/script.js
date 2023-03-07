@@ -116,15 +116,6 @@ cityForm.addEventListener('submit', function (event) {
     if (!cityInput.value) {
         return;
     }
-    // This is intended to eliminate storing duplicate search items.
-    // Could not work out the details.  Will address this in the future.
-    // for (let i = 0; i < searchHistory.length; i++) {
-    //     if (cityInput.value != searchHistory[i]) {
-            
-    //     }
-    // }
-    // console.log(cityInput.value);
-
     // Call getWeather w/ user input city name as argument
     getWeather(cityInput.value);
     // Push city name to search history array
