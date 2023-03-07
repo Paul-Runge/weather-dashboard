@@ -21,6 +21,7 @@ If the user wishes to clear the search history, simply click on the red clear hi
 * JavaScript
 * jQuery
 * OpenWeatherMap API
+* Fetch API
 
 ## Deployed Application Link
 https://paul-runge.github.io/weather-dashboard/
